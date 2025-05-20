@@ -50,7 +50,7 @@ export default function RootLayout({
                 </div>
                 {!hasEnvVars ? <EnvVarWarning /> : <HeaderAuth />}
               </nav>
-              <div className="flex flex-col gap-20 pt-16 max-w-5xl p-5 min-h-screen container mx-auto">
+              <div className="flex flex-col gap-20 p-5 min-h-screen container">
                 <AppSidebar />
                 {children}
               </div>

@@ -1,8 +1,15 @@
 import { type NextRequest } from "next/server";
 import { updateSession } from "@/utils/supabase/middleware";
+import { NextResponse } from 'next/server'
 
 export async function middleware(request: NextRequest) {
-  return await updateSession(request);
+  // ตรวจสอบว่า user เข้า '/'
+  if (request.nextUrl.pathname === '/') {
+    // redirect ไปที่ /notes
+    return NextResponse.redirect(new URL('/notes', request.url))
+  }
+
+  return NextResponse.next()
 }
 
 export const config = {

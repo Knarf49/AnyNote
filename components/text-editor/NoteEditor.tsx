@@ -53,7 +53,7 @@ export default function NoteEditor({ content, onChange }: NoteEditorProps) {
       <div className="fixed top-16">
         <MenuBar editor={editor} />
       </div>
-      <div className="min-h-screen px-2 mt-8">
+      <div className="min-h-screen px-2 mt-36 md:mt-8">
         <EditorContent editor={editor} />
       </div>
     </>
