@@ -1,0 +1,2 @@
+# AnyNote
+Nextjs Note app
