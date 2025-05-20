@@ -5,6 +5,7 @@ import StarterKit from "@tiptap/starter-kit";
 import { useEffect } from "react";
 import { MenuBar } from "./menu-bar";
 import TextAlign from "@tiptap/extension-text-align";
+import Highlight from "@tiptap/extension-highlight";
 
 type NoteEditorProps = {
   content: string;
@@ -14,9 +15,25 @@ type NoteEditorProps = {
 export default function NoteEditor({ content, onChange }: NoteEditorProps) {
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        bulletList: {
+          HTMLAttributes: {
+            class: "list-disc ml-3",
+          },
+        },
+        orderedList: {
+          HTMLAttributes: {
+            class: "list-decimal ml-3",
+          },
+        },
+      }),
       TextAlign.configure({
         types: ["heading", "paragraph"],
+      }),
+      Highlight.configure({
+        HTMLAttributes: {
+          class: "my-custom-class",
+        },
       }),
     ],
     content,
@@ -32,9 +49,13 @@ export default function NoteEditor({ content, onChange }: NoteEditorProps) {
   }, [content]);
 
   return (
-    <div className="rounded min-h-screen">
-      <MenuBar editor={editor} />
-      <EditorContent editor={editor} />
-    </div>
+    <>
+      <div className="fixed top-16">
+        <MenuBar editor={editor} />
+      </div>
+      <div className="min-h-screen px-2 mt-8">
+        <EditorContent editor={editor} />
+      </div>
+    </>
   );
 }

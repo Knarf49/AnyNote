@@ -7,6 +7,10 @@ import { Geist } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import Link from "next/link";
 import "./globals.css";
+import { Button } from "@/components/ui/button";
+import { MenuIcon } from "lucide-react";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/app-sidebar";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -37,17 +41,17 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <main className="min-h-screen flex flex-col items-center">
-            <div className="flex-1 w-full flex flex-col gap-20 items-center">
-              <nav className="w-full flex fixed z-50 justify-center border-b border-b-foreground/10 bg-background h-16">
-                <div className="w-full max-w-5xl flex justify-between items-center p-3 px-5 text-sm">
-                  <div className="flex gap-5 items-center font-semibold text-xl">
-                    <Link href={"/"}>AnyNote</Link>
-                  </div>
-                  {!hasEnvVars ? <EnvVarWarning /> : <HeaderAuth />}
+          <SidebarProvider>
+            <main className="min-h-screen flex flex-col items-center w-full">
+              <nav className="w-full flex fixed z-50 justify-between items-center px-6 border-b border-b-foreground/10 bg-background h-16">
+                <div className="flex gap-5 items-center font-semibold text-xl">
+                  <SidebarTrigger />
+                  <Link href={"/"}>AnyNote</Link>
                 </div>
+                {!hasEnvVars ? <EnvVarWarning /> : <HeaderAuth />}
               </nav>
               <div className="flex flex-col gap-20 pt-16 max-w-5xl p-5 min-h-screen container mx-auto">
+                <AppSidebar />
                 {children}
               </div>
 
@@ -65,8 +69,8 @@ export default function RootLayout({
                 </p>
                 <ThemeSwitcher />
               </footer>
-            </div>
-          </main>
+            </main>
+          </SidebarProvider>
         </ThemeProvider>
       </body>
     </html>
