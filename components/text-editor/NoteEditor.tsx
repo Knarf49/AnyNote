@@ -6,13 +6,36 @@ import { useEffect } from "react";
 import { MenuBar } from "./menu-bar";
 import TextAlign from "@tiptap/extension-text-align";
 import Highlight from "@tiptap/extension-highlight";
+import { createClient } from "@/utils/supabase/client";
+import debounce from "lodash.debounce";
 
 type NoteEditorProps = {
   content: string;
+  noteId: string;
   onChange: (value: string) => void;
 };
 
-export default function NoteEditor({ content, onChange }: NoteEditorProps) {
+export default function NoteEditor({
+  noteId,
+  content,
+  onChange,
+}: NoteEditorProps) {
+  const supabase = createClient();
+  // Save to database
+  const saveToDatabase = debounce(async (html: string) => {
+    const { error } = await supabase
+      .from("notes")
+      .update({ content: html })
+      .eq("id", noteId)
+      .select();
+
+    if (error) {
+      console.error("❌ Auto-save error:", error.message);
+    } else {
+      console.log("✅ Auto-save success");
+    }
+  }, 500);
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -38,7 +61,9 @@ export default function NoteEditor({ content, onChange }: NoteEditorProps) {
     ],
     content,
     onUpdate: ({ editor }) => {
-      onChange(editor.getHTML()); // ส่งค่ากลับเมื่อพิมพ์
+      const html = editor.getHTML();
+      onChange(html); // ส่งค่ากลับเมื่อพิมพ์
+      saveToDatabase(html); // ✅ auto-save ไปที่ Supabase ด้วย
     },
   });
 

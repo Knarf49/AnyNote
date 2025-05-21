@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { MenuIcon } from "lucide-react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
+import { createClient } from "@/utils/supabase/server";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -27,11 +28,16 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
   return (
     <html lang="en" className={geistSans.className} suppressHydrationWarning>
       <body className="bg-background text-foreground">
@@ -45,10 +51,10 @@ export default function RootLayout({
             <main className="min-h-screen flex flex-col items-center w-full">
               <nav className="w-full flex fixed z-50 justify-between items-center px-6 border-b border-b-foreground/10 bg-background h-16">
                 <div className="flex gap-5 items-center font-semibold text-xl">
-                  <SidebarTrigger />
+                  {user && <SidebarTrigger />}
                   <Link href={"/"}>AnyNote</Link>
                 </div>
-                {!hasEnvVars ? <EnvVarWarning /> : <HeaderAuth />}
+                <HeaderAuth />
               </nav>
               <div className="flex flex-col gap-20 p-5 min-h-screen container">
                 <AppSidebar />
