@@ -40,7 +40,6 @@ export default function NotePage({
     fetchNote();
   }, [id, router, supabase]);
 
-  if (loading) return <p>Loading...</p>;
   if (notFound)
     return (
       <p className="text-center mt-24 text-muted-foreground">

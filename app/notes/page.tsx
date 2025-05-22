@@ -23,6 +23,10 @@ export default function NotePage() {
     fetchUser();
   }, []);
 
+  if (loading) {
+    return <p className="text-center mt-10">Loading...</p>;
+  }
+
   return (
     <div className="max-w-2xl mx-auto w-full min-h-screen py-10">
       {user ? (
