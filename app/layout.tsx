@@ -57,7 +57,7 @@ export default async function RootLayout({
                 <HeaderAuth />
               </nav>
               <div className="flex flex-col gap-20 p-5 min-h-screen container">
-                <AppSidebar />
+                {user && <AppSidebar />}
                 {children}
               </div>
 
