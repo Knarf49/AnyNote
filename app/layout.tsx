@@ -52,7 +52,7 @@ export default async function RootLayout({
               <nav className="w-full flex fixed z-50 justify-between items-center px-6 border-b border-b-foreground/10 bg-background h-16">
                 <div className="flex gap-5 items-center font-semibold text-xl">
                   {user && <SidebarTrigger />}
-                  <Link href={"/"}>AnyNote</Link>
+                  <h1>AnyNote</h1>
                 </div>
                 <HeaderAuth />
               </nav>
