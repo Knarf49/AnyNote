@@ -11,7 +11,7 @@ import debounce from "lodash.debounce";
 
 type NoteEditorProps = {
   content: string;
-  noteId: string;
+  noteId?: string;
   onChange: (value: string) => void;
 };
 
@@ -28,12 +28,6 @@ export default function NoteEditor({
       .update({ content: html })
       .eq("id", noteId)
       .select();
-
-    if (error) {
-      console.error("❌ Auto-save error:", error.message);
-    } else {
-      console.log("✅ Auto-save success");
-    }
   }, 500);
 
   const editor = useEditor({

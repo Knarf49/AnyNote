@@ -26,6 +26,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { Note } from "@/utils/supabase/type";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
+import { useRouter } from "next/navigation";
 
 export function AppSidebar() {
   const [notes, setNotes] = useState<Note[]>([]);
@@ -33,6 +34,7 @@ export function AppSidebar() {
   const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
   const [newTitle, setNewTitle] = useState("");
   const supabase = createClient();
+  const router = useRouter();
 
   // Load all notes
   const loadNotes = async () => {
@@ -75,7 +77,8 @@ export function AppSidebar() {
     if (error) {
       console.error("Error creating note:", error);
     } else if (data) {
-      setNotes((prev) => [data, ...prev]); // แสดง note ใหม่ใน sidebar
+      setNotes((prev) => [data, ...prev]);
+      router.push(`/notes/${data.id}`);
     }
 
     setLoading(false);
@@ -111,10 +114,21 @@ export function AppSidebar() {
   const deleteNote = async (id: string) => {
     const confirmDelete = confirm("Are you sure you want to delete this note?");
     if (!confirmDelete) return;
+
     const { error } = await supabase.from("notes").delete().eq("id", id);
 
     if (!error) {
-      setNotes((prev) => prev.filter((note) => note.id !== id));
+      const updatedNotes = notes.filter((note) => note.id !== id);
+      setNotes(updatedNotes);
+
+      // ✅ Redirect หลังลบเสร็จ
+      if (updatedNotes.length === 0) {
+        router.push("/notes"); // กลับหน้าหลักถ้าไม่มี note เหลือ
+      } else {
+        router.push(`/notes/${updatedNotes[0].id}`); // หรือไปที่ note ถัดไป
+      }
+    } else {
+      console.error("Failed to delete note:", error.message);
     }
   };
 
